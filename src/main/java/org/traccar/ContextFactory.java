@@ -16,14 +16,12 @@
 package org.traccar;
 
 import java.util.Objects;
-import java.util.Properties;
 
 import org.traccar.context.Context;
-import org.traccar.database.DataManager;
 
 public abstract class ContextFactory {
 
-	//TODO: Temp solution for avoiding static
+	//TODO: Temp solution to support glue between static approach and DI.
 	private static Context context;
 	
 	public static Context getContext() {
@@ -35,13 +33,4 @@ public abstract class ContextFactory {
 	public static void setContext(Context context) {
 		ContextFactory.context = context;
 	}
-
-	/**
-	 * Initialize context for unit testing
-	 */
-	public static void init(DataManager dataManager) {
-		getContext().setProperties(new Properties());
-		getContext().setDataManager(dataManager);
-	}
-
 }

@@ -1,12 +1,11 @@
 package org.traccar.protocol;
 
+import static org.junit.Assert.assertNull;
+import static org.traccar.helper.DecoderVerifier.verify;
+
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.junit.Test;
 import org.traccar.helper.ChannelBufferTools;
-import org.traccar.helper.TestDataManager;
-
-import static org.junit.Assert.assertNull;
-import static org.traccar.helper.DecoderVerifier.verify;
 
 public class AutoFon45ProtocolDecoderTest extends ProtocolDecoderTest {
     @Test

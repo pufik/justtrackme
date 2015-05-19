@@ -1,15 +1,11 @@
 package org.traccar.protocol;
 
-import org.traccar.ContextFactory;
-import org.traccar.helper.TestDataManager;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-public class ProtocolDecoderTest {
-
-    static {
-        try {
-            ContextFactory.init(new TestDataManager());
-        } catch(Exception error) {
-        }
-    }
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:test-application-context.xml"})
+public abstract class ProtocolDecoderTest {
 
 }
