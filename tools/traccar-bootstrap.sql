@@ -1,0 +1,73 @@
+CREATE TABLE user (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(1024) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(1024) NOT NULL,
+    salt VARCHAR(1024) NOT NULL,
+    readonly BOOLEAN DEFAULT FALSE NOT NULL,
+    admin BOOLEAN DEFAULT FALSE NOT NULL,
+    map VARCHAR(1024) DEFAULT 'osm' NOT NULL,
+    language VARCHAR(1024) DEFAULT 'en' NOT NULL,
+    distanceUnit VARCHAR(1024) DEFAULT 'km' NOT NULL,
+    speedUnit VARCHAR(1024) DEFAULT 'kmh' NOT NULL,
+    latitude DOUBLE DEFAULT 0 NOT NULL,
+    longitude DOUBLE DEFAULT 0 NOT NULL,
+    zoom INT DEFAULT 0 NOT NULL
+)  ENGINE=INNODB;
+
+CREATE TABLE device (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(1024) NOT NULL,
+    uniqueId VARCHAR(255) NOT NULL UNIQUE,
+    status VARCHAR(1024),
+    lastUpdate TIMESTAMP,
+    positionId INT,
+    dataId INT
+)  ENGINE=INNODB;
+
+CREATE TABLE user_device (userId INT NOT NULL, deviceId INT NOT NULL, `read` BOOLEAN DEFAULT true NOT NULL, `write` BOOLEAN DEFAULT true NOT NULL,FOREIGN KEY (userId) REFERENCES user(id) ON DELETE CASCADE,FOREIGN KEY (deviceId) REFERENCES device(id) ON DELETE CASCADE) ENGINE = InnoDB;
+CREATE INDEX user_device_user_id ON user_device(userId);
+CREATE TABLE position (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    protocol VARCHAR(1024),
+    deviceId INT NOT NULL,
+    serverTime TIMESTAMP NOT NULL,
+    deviceTime TIMESTAMP NOT NULL,
+    fixTime TIMESTAMP NOT NULL,
+    valid BOOLEAN NOT NULL,
+    latitude DOUBLE NOT NULL,
+    longitude DOUBLE NOT NULL,
+    altitude DOUBLE NOT NULL,
+    speed DOUBLE NOT NULL,
+    course DOUBLE NOT NULL,
+    address VARCHAR(1024),
+    other VARCHAR(8192) NOT NULL,
+    FOREIGN KEY (deviceId)
+        REFERENCES device (id)
+        ON DELETE CASCADE
+)  ENGINE=INNODB;
+
+CREATE TABLE data (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    protocol VARCHAR(1024),
+    deviceId INT NOT NULL,
+    serverTime TIMESTAMP NOT NULL,
+    deviceTime TIMESTAMP NOT NULL,
+    other VARCHAR(8192) NOT NULL,
+    FOREIGN KEY (deviceId)
+        REFERENCES device (id)
+)  ENGINE=INNODB;
+
+ALTER TABLE device ADD FOREIGN KEY (positionId) REFERENCES `position`(id);
+
+ALTER TABLE device ADD FOREIGN KEY (dataId) REFERENCES data(id);CREATE TABLE server (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    registration BOOLEAN NOT NULL,
+    latitude DOUBLE NOT NULL,
+    longitude DOUBLE NOT NULL,
+    zoom INT NOT NULL
+)  ENGINE=INNODB;
+
+CREATE TABLE traccar1 (
+    id INT PRIMARY KEY AUTO_INCREMENT
+)  ENGINE=INNODB;

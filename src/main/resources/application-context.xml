@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	">
+
+	<context:annotation-config />
+	<context:property-placeholder properties-ref="applicationProperties" />
+
+	<bean id="applicationProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="locations">
+			<list>
+				<value>classpath:traccar.xml</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- Server Context -->
+	<bean id="serverContext" class="org.traccar.context.Context">
+		<property name="properties" ref="applicationProperties" />
+		<property name="dataManager" ref="dataManager" />
+		<property name="dataCache" ref="dataCache" />
+	</bean>
+
+	<bean id="contextFactory" class="org.springframework.beans.factory.config.MethodInvokingBean">
+		<property name="targetClass" value="org.traccar.ContextFactory" />
+		<property name="targetMethod" value="setContext" />
+		<property name="arguments" ref="serverContext" />
+	</bean>
+
+	<!-- Server Manager -->
+	<bean id="serverManager" class="org.traccar.ServerManager" init-method="init" destroy-method="stop">
+		<property name="properties" ref="applicationProperties" />
+	</bean>
+
+	<bean id="serverStartup" class="org.springframework.beans.factory.config.MethodInvokingBean">
+		<property name="targetObject" ref="serverManager" />
+		<property name="targetMethod" value="start" />
+	</bean>
+	
+	<!-- Data managers -->
+	<alias name="defaultDataManager" alias="dataManager"/>
+	<bean id="defaultDataManager" class="org.traccar.database.DataManager">
+		<constructor-arg ref="applicationProperties" />
+	</bean>
+	
+	<bean id="mockDataManager" class="org.traccar.helper.MockDataManager" />
+
+	<bean id="dataCache" class="org.traccar.database.DataCache">
+		<constructor-arg ref="dataManager" />
+	</bean>
+
+</beans>
