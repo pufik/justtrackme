@@ -1,4 +1,4 @@
-package com.xdev.template.rest.resource;
+package com.justtrackme.rest.resource;
 
 import java.util.HashSet;
 import java.util.Set;

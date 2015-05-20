@@ -11,6 +11,7 @@
 	<modules>
 		<module>traccar-server</module>
 		<module>justtrackme-rest-api</module>
+		<module>justtrackme-persistence</module>
 	</modules>
 
 	<properties>
@@ -27,6 +28,11 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-support</artifactId>
+			<version>4.1.4.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
 			<version>4.1.4.RELEASE</version>
 		</dependency>
 		<dependency>

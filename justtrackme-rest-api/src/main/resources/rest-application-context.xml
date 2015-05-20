@@ -6,8 +6,7 @@
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 	">
 
-	<bean id="applicationProperties"
-		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+	<bean id="applicationProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
 		<property name="locations">
 			<list>
 				<value>classpath:application.properties</value>

@@ -1,11 +1,11 @@
-package com.xdev.template.rest.controller;
+package com.justtrackme.rest.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.xdev.template.rest.resource.Message;
+import com.justtrackme.rest.resource.Message;
 
 public abstract class BaseController {
 

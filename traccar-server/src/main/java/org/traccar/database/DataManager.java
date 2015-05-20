@@ -18,14 +18,12 @@ package org.traccar.database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 import org.traccar.model.Device;
@@ -33,17 +31,17 @@ import org.traccar.model.Permission;
 import org.traccar.model.Position;
 import org.traccar.model.User;
 
+import com.justtrackme.dao.device.DeviceDao;
+
 public class DataManager {
 
 	private final DataSource dataSource;
+	
+	@Resource(name = "deviceDao")
+	private DeviceDao deviceDao;
 
-	private NamedParameterStatement queryGetDevices;
 	private NamedParameterStatement queryAddPosition;
 	private NamedParameterStatement queryUpdateLatestPosition;
-	private Map<String, Device> devices;
-	private Calendar devicesLastUpdate;
-	private long devicesRefreshDelay = DEFAULT_REFRESH_DELAY * 1000;
-	private static final long DEFAULT_REFRESH_DELAY = 300;
 
 	public DataManager(DataSource dataSource) {
 		super();
@@ -53,7 +51,6 @@ public class DataManager {
 	@PostConstruct
 	public void init() throws Exception {
 		// Initialize queries
-		queryGetDevices = new NamedParameterStatement("SELECT id, uniqueId as imei FROM device;", dataSource);
 		queryAddPosition = new NamedParameterStatement(
 				"INSERT INTO position (deviceId, serverTime, deviceTime, fixTime, valid, latitude, longitude, altitude, speed, course, address, other)"
 						+ " VALUES (:deviceId, NOW(), :time, :time, :valid, :latitude, :longitude, :altitude, :speed, :course, :address, :other);", dataSource,
@@ -66,41 +63,19 @@ public class DataManager {
 		return dataSource;
 	}
 
-	private final NamedParameterStatement.ResultSetProcessor<Device> deviceResultSetProcessor = new NamedParameterStatement.ResultSetProcessor<Device>() {
-		@Override
-		public Device processNextRow(ResultSet rs) throws SQLException {
-			Device device = new Device();
-			device.setId(rs.getLong("id"));
-			device.setUniqueId(rs.getString("imei"));
-			return device;
-		}
-	};
-
-	public List<Device> getDevices() throws SQLException {
-		if (queryGetDevices != null) {
-			return queryGetDevices.prepare().executeQuery(deviceResultSetProcessor);
-		} else {
-			return new LinkedList<Device>();
-		}
-	}
-
-	/**
-	 * Devices cache
-	 */
-
 	public Device getDeviceByUniqueId(String uniqueId) throws SQLException {
-
-		if (devices == null || !devices.containsKey(uniqueId)
-				|| (Calendar.getInstance().getTimeInMillis() - devicesLastUpdate.getTimeInMillis() > devicesRefreshDelay)) {
-
-			devices = new HashMap<String, Device>();
-			for (Device device : getDevices()) {
-				devices.put(device.getUniqueId(), device);
-			}
-			devicesLastUpdate = Calendar.getInstance();
+		Device trackDevice = null;
+		
+		com.justtrackme.model.Device device = deviceDao.getById(uniqueId);
+		
+		if(Objects.nonNull(device)){
+			trackDevice = new Device();
+			trackDevice.setId(device.getId());
+			trackDevice.setUniqueId(device.getUniqueId());
+			trackDevice.setName(device.getName());
 		}
 
-		return devices.get(uniqueId);
+		return trackDevice; 
 	}
 
 	private NamedParameterStatement.ResultSetProcessor<Long> generatedKeysResultSetProcessor = new NamedParameterStatement.ResultSetProcessor<Long>() {

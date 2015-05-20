@@ -1,4 +1,4 @@
-package com.xdev.template.rest.controller;
+package com.justtrackme.rest.controller;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.xdev.template.rest.resource.Message;
-import com.xdev.template.rest.resource.User;
+import com.justtrackme.rest.resource.Message;
+import com.justtrackme.rest.resource.User;
 
 @RestController
 @RequestMapping("/users")
