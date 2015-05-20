@@ -1,5 +1,5 @@
-# [JustTrackMe]()
-[![Build Status](https://travis-ci.org/pufik/justtrackme.svg?branch=master)](https://travis-ci.org/pufik/justtrackme)
+# [Traccar](https://www.traccar.org)
+[![Build Status](https://travis-ci.org/tananaev/traccar.svg?branch=master)](https://travis-ci.org/tananaev/traccar)
 
 ## Contacts
 
@@ -9,7 +9,7 @@ Website - [https://www.traccar.org](https://www.traccar.org)
 
 ## Overview
 
-JustTrackMe is open source project for various GPS tracking devices. Project forked from Traccar and it is written in Java and works on most platforms with installed Java Runtime Environment.
+Traccar is open source server for various GPS tracking devices. Project is written in Java and works on most platforms with installed Java Runtime Environment.
 
 ## License
 
