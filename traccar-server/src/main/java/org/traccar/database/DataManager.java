@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 import org.traccar.model.Device;
@@ -35,18 +34,12 @@ import com.justtrackme.dao.device.DeviceDao;
 
 public class DataManager {
 
-	private final DataSource dataSource;
+	private DataSource dataSource;
 	
-	@Resource(name = "deviceDao")
 	private DeviceDao deviceDao;
 
 	private NamedParameterStatement queryAddPosition;
 	private NamedParameterStatement queryUpdateLatestPosition;
-
-	public DataManager(DataSource dataSource) {
-		super();
-		this.dataSource = dataSource;
-	}
 
 	@PostConstruct
 	public void init() throws Exception {
@@ -171,4 +164,15 @@ public class DataManager {
 				.setLong("deviceId", deviceId).executeUpdate();
 	}
 
+	public DeviceDao getDeviceDao() {
+		return deviceDao;
+	}
+
+	public void setDeviceDao(DeviceDao deviceDao) {
+		this.deviceDao = deviceDao;
+	}
+
+	public void setDataSource(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
 }

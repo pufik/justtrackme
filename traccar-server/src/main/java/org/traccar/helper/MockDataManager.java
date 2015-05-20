@@ -5,10 +5,6 @@ import org.traccar.model.Device;
 
 public class MockDataManager extends DataManager {
 
-    public MockDataManager() throws Exception {
-        super(null);
-    }
-
     @Override
     public Device getDeviceByUniqueId(String imei) {
         Device device = new Device();
