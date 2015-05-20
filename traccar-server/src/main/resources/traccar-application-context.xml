@@ -7,9 +7,9 @@
 	">
 
 	<context:annotation-config />
-	<context:property-placeholder properties-ref="applicationProperties" />
+	<context:property-placeholder properties-ref="traccarApplicationProperties" />
 
-	<bean id="applicationProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+	<bean id="traccarApplicationProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
 		<property name="locations">
 			<list>
 				<value>classpath:traccar.xml</value>
@@ -19,7 +19,7 @@
 
 	<!-- Server Context -->
 	<bean id="serverContext" class="org.traccar.context.Context">
-		<property name="properties" ref="applicationProperties" />
+		<property name="properties" ref="traccarApplicationProperties" />
 		<property name="dataManager" ref="dataManager" />
 		<property name="dataCache" ref="dataCache" />
 	</bean>
@@ -32,7 +32,7 @@
 
 	<!-- Server Manager -->
 	<bean id="serverManager" class="org.traccar.ServerManager" init-method="init" destroy-method="stop">
-		<property name="properties" ref="applicationProperties" />
+		<property name="properties" ref="traccarApplicationProperties" />
 	</bean>
 
 	<bean id="serverStartup" class="org.springframework.beans.factory.config.MethodInvokingBean">
@@ -43,7 +43,7 @@
 	<!-- Data managers -->
 	<alias name="defaultDataManager" alias="dataManager"/>
 	<bean id="defaultDataManager" class="org.traccar.database.DataManager">
-		<constructor-arg ref="applicationProperties" />
+		<constructor-arg ref="traccarApplicationProperties" />
 	</bean>
 	
 	<bean id="mockDataManager" class="org.traccar.helper.MockDataManager" />

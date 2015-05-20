@@ -8,11 +8,11 @@
 
 	<context:annotation-config />
 	
-	<bean id="applicationProperties" class="java.util.Properties" />
+	<bean id="traccarApplicationProperties" class="java.util.Properties" />
 	
 	<!-- Server Context -->
 	<bean id="serverContext" class="org.traccar.context.Context">
-	    <property name="properties" ref="applicationProperties" />
+	    <property name="properties" ref="traccarApplicationProperties" />
 		<property name="dataManager" ref="dataManager" />
 		<property name="dataCache" ref="dataCache" />
 	</bean>
