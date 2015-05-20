@@ -39,11 +39,20 @@
 		<property name="targetObject" ref="serverManager" />
 		<property name="targetMethod" value="start" />
 	</bean>
-	
+
 	<!-- Data managers -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${database.driver}" />
+		<property name="jdbcUrl" value="${database.url}" />
+		<property name="user" value="${database.user}" />
+		<property name="password" value="${database.password}" />
+		<property name="idleConnectionTestPeriod" value="600" />
+		<property name="testConnectionOnCheckin" value="true" />
+	</bean>
+	
 	<alias name="defaultDataManager" alias="dataManager"/>
 	<bean id="defaultDataManager" class="org.traccar.database.DataManager">
-		<constructor-arg ref="traccarApplicationProperties" />
+		<constructor-arg ref="dataSource" />
 	</bean>
 	
 	<bean id="mockDataManager" class="org.traccar.helper.MockDataManager" />

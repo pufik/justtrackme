@@ -24,7 +24,7 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		Locale.setDefault(Locale.ENGLISH);
 		
-		new ClassPathXmlApplicationContext("classpath:application-context.xml");
+		new ClassPathXmlApplicationContext("classpath:traccar-application-context.xml");
 
 	}
 }
