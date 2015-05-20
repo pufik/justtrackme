@@ -28,7 +28,6 @@ import javax.sql.DataSource;
 import org.traccar.model.Device;
 import org.traccar.model.Permission;
 import org.traccar.model.Position;
-import org.traccar.model.User;
 
 import com.justtrackme.dao.device.DeviceDao;
 
@@ -118,50 +117,8 @@ public class DataManager {
 		return params;
 	}
 
-	public User login(String email, String password) throws SQLException {
-		Collection<User> result = QueryBuilder
-				.create(dataSource,
-						"SELECT * FROM user WHERE email = :email AND " + "password = CAST(HASH('SHA256', STRINGTOUTF8(:password), 1000) AS VARCHAR);")
-				.setString("email", email).setString("password", password).executeQuery(new User());
-		if (!result.isEmpty()) {
-			return result.iterator().next();
-		} else {
-			return null;
-		}
-	}
-
-	public void addUser(User user) throws SQLException {
-		user.setId(QueryBuilder
-				.create(dataSource,
-						"INSERT INTO user (name, email, password, salt, admin) "
-								+ "VALUES (:name, :email, CAST(HASH('SHA256', STRINGTOUTF8(:password), 1000) AS VARCHAR), '', :admin);").setObject(user)
-				.executeUpdate());
-	}
-
 	public Collection<Permission> getPermissions() throws SQLException {
 		return QueryBuilder.create(dataSource, "SELECT userId, deviceId FROM user_device;").executeQuery(new Permission());
-	}
-
-	public Collection<Device> getDevices(long userId) throws SQLException {
-		return QueryBuilder.create(dataSource, "SELECT * FROM device WHERE id IN (" + "SELECT deviceId FROM user_device WHERE userId = :userId);")
-				.setLong("userId", userId).executeQuery(new Device());
-	}
-
-	public void addDevice(Device device) throws SQLException {
-		device.setId(QueryBuilder.create(dataSource, "INSERT INTO device (name, uniqueId) VALUES (:name, :uniqueId);").setObject(device).executeUpdate());
-	}
-
-	public void updateDevice(Device device) throws SQLException {
-		QueryBuilder.create(dataSource, "UPDATE device SET name = :name, uniqueId = :uniqueId WHERE id = :id;").setObject(device).executeUpdate();
-	}
-
-	public void removeDevice(Device device) throws SQLException {
-		QueryBuilder.create(dataSource, "DELETE FROM device WHERE id = :id;").setObject(device).executeUpdate();
-	}
-
-	public void linkDevice(long userId, long deviceId) throws SQLException {
-		QueryBuilder.create(dataSource, "INSERT INTO user_device (userId, deviceId) VALUES (:userId, :deviceId);").setLong("userId", userId)
-				.setLong("deviceId", deviceId).executeUpdate();
 	}
 
 	public DeviceDao getDeviceDao() {
