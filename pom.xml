@@ -9,7 +9,7 @@
 
 	<url>http://www.justtrackme.com</url>
 	<modules>
-		<module>traccar-server</module>
+		<module>justtrackme-server</module>
 		<module>justtrackme-rest-api</module>
 		<module>justtrackme-persistence</module>
 	</modules>

@@ -1,15 +1,8 @@
-# [Traccar](https://www.traccar.org)
-[![Build Status](https://travis-ci.org/tananaev/traccar.svg?branch=master)](https://travis-ci.org/tananaev/traccar)
-
-## Contacts
-
-Author - Anton Tananaev ([anton.tananaev@gmail.com](mailto:anton.tananaev@gmail.com))
-
-Website - [https://www.traccar.org](https://www.traccar.org)
+# [JustTrackMe Server]()
 
 ## Overview
 
-Traccar is open source server for various GPS tracking devices. Project is written in Java and works on most platforms with installed Java Runtime Environment.
+Traccar is open source server for various GPS tracking devices. Project was forked from Traccar and it is written in Java and works on most platforms with installed Java Runtime Environment.
 
 ## License
 
