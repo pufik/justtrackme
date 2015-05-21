@@ -22,13 +22,15 @@ import java.util.TimeZone;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.traccar.BaseProtocolDecoder;
-import org.traccar.helper.Log;
 import org.traccar.model.Event;
 import org.traccar.model.Position;
 
 public class SkypatrolProtocolDecoder extends BaseProtocolDecoder {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(SkypatrolProtocolDecoder.class);
 
     public SkypatrolProtocolDecoder(String protocol) {
         super(protocol);
@@ -93,7 +95,7 @@ public class SkypatrolProtocolDecoder extends BaseProtocolDecoder {
                 id = buf.toString(buf.readerIndex(), 22, Charset.defaultCharset()).trim();
                 buf.skipBytes(22);
             } else {
-                Log.warning("No device id field");
+                LOG.warn("No device id field");
                 return null;
             }
             if (!identify(id)) {

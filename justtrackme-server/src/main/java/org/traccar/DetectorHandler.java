@@ -15,17 +15,24 @@
  */
 package org.traccar;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.channel.*;
-import org.jboss.netty.handler.codec.frame.FrameDecoder;
-import org.jboss.netty.handler.codec.string.StringDecoder;
-import org.traccar.helper.Log;
-
 import java.lang.reflect.Method;
 import java.net.SocketAddress;
 import java.util.List;
 
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.channel.Channel;
+import org.jboss.netty.channel.ChannelHandlerContext;
+import org.jboss.netty.channel.ChannelPipeline;
+import org.jboss.netty.channel.MessageEvent;
+import org.jboss.netty.channel.SimpleChannelHandler;
+import org.jboss.netty.handler.codec.frame.FrameDecoder;
+import org.jboss.netty.handler.codec.string.StringDecoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class DetectorHandler extends SimpleChannelHandler {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(DetectorHandler.class);
 
     private List<TrackerServer> serverList;
     
@@ -83,9 +90,9 @@ public class DetectorHandler extends SimpleChannelHandler {
         }
 
         if (tmp != null) {
-            Log.info("Protocol " + protocol + " possible match");
+            LOG.info("Protocol " + protocol + " possible match");
         } else if (showFailed) {
-            Log.info("Protocol " + protocol + " no match");
+            LOG.info("Protocol " + protocol + " no match");
         }
     }
 
@@ -102,7 +109,7 @@ public class DetectorHandler extends SimpleChannelHandler {
                     }
                 } catch(Exception error) {
                     if (showFailed) {
-                        Log.info("Protocol " + server.getProtocol() + " error");
+                        LOG.info("Protocol " + server.getProtocol() + " error");
                     }
                 }
             }

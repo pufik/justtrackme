@@ -15,18 +15,22 @@
  */
 package org.traccar.model;
 
-import org.traccar.helper.Log;
+import java.text.DecimalFormat;
+import java.util.Map;
 
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-import java.text.DecimalFormat;
-import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Format extended tracker status
  */
 public class MiscFormatter {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(MiscFormatter.class);
 
     private static final String xmlRootNode = "info";
 
@@ -72,15 +76,10 @@ public class MiscFormatter {
             } else if (entry.getValue() instanceof Boolean) {
                 json.add(entry.getKey(), (Boolean) entry.getValue());
             } else {
-                Log.warning("Unknown type of data");
+                LOG.warn("Unknown type of data");
             }
         }
 
         return json.build();
     }
-    
-    private static String toJsonString(Map<String, Object> other) {
-        return toJson(other).toString();
-    }
-
 }

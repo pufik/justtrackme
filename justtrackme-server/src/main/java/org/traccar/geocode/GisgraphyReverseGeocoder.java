@@ -15,15 +15,19 @@
  */
 package org.traccar.geocode;
 
-import org.traccar.helper.Log;
-
-import javax.json.Json;
-import javax.json.JsonObject;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class GisgraphyReverseGeocoder implements ReverseGeocoder {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(GisgraphyReverseGeocoder.class);
 
     private final String url;
 
@@ -58,7 +62,7 @@ public class GisgraphyReverseGeocoder implements ReverseGeocoder {
             return format.format(address);
 
         } catch(Exception error) {
-            Log.warning(error);
+            LOG.warn("Can't get address", error);
         }
 
         return null;

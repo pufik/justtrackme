@@ -32,10 +32,13 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
 import org.jboss.netty.handler.logging.LoggingHandler;
 import org.jboss.netty.handler.timeout.IdleStateHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.traccar.context.Context;
-import org.traccar.helper.Log;
 
 public abstract class BasePipelineFactory implements ChannelPipelineFactory {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(BasePipelineFactory.class);
 
     private final TrackerServer server;
     private FilterHandler filterHandler;
@@ -81,10 +84,10 @@ public abstract class BasePipelineFactory implements ChannelPipelineFactory {
                     msg.append(ChannelBuffers.hexDump((ChannelBuffer) event.getMessage()));
                 }
 
-                Log.debug(msg.toString());
+                LOG.debug(msg.toString());
             } else if (e instanceof ExceptionEvent) {
                 ExceptionEvent event = (ExceptionEvent) e;
-                Log.warning(event.getCause());
+                LOG.warn("Communication issue", event.getCause());
             }
         }
 

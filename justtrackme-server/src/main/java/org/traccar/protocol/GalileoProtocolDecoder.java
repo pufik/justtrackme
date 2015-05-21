@@ -17,19 +17,27 @@ package org.traccar.protocol;
 
 import java.nio.ByteOrder;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.traccar.BaseProtocolDecoder;
-import org.traccar.helper.Log;
 import org.traccar.model.Event;
 import org.traccar.model.Position;
 
 public class GalileoProtocolDecoder extends BaseProtocolDecoder {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(GalileoProtocolDecoder.class);
 
     public GalileoProtocolDecoder(String protocol) {
         super(protocol);
@@ -162,7 +170,7 @@ public class GalileoProtocolDecoder extends BaseProtocolDecoder {
         }
         
         if (!hasDeviceId()) {
-            Log.warning("Unknown device");
+            LOG.warn("Unknown device");
             return null;
         }
 

@@ -26,15 +26,17 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.traccar.BaseProtocolDecoder;
 import org.traccar.helper.Crc;
-import org.traccar.helper.Log;
 import org.traccar.helper.UnitsConverter;
 import org.traccar.model.Event;
 import org.traccar.model.Position;
 
 public class ApelProtocolDecoder extends BaseProtocolDecoder {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(ApelProtocolDecoder.class);
 
     private long lastIndex;
     private long newIndex;
@@ -72,24 +74,6 @@ public class ApelProtocolDecoder extends BaseProtocolDecoder {
     private static final short MSG_TYPE_GPRS_COMMAND = 180;
 
     private static final String HEX_CHARS = "0123456789ABCDEF";
-
-    private void loadLastIndex() {
-        /*try {
-            Properties p = getServerManager().getProperties();
-            if (p.contains("database.selectLastIndex")) {
-                AdvancedConnection connection = new AdvancedConnection(
-                        p.getProperty("database.url"), p.getProperty("database.user"), p.getProperty("database.password"));
-                NamedParameterStatement queryLastIndex = new NamedParameterStatement(connection, p.getProperty("database.selectLastIndex"));
-                queryLastIndex.prepare();
-                queryLastIndex.setLong("device_id", deviceId);
-                ResultSet result = queryLastIndex.executeQuery();
-                if (result.next()) {
-                    lastIndex = result.getLong(1);
-                }
-            }
-        } catch(Exception error) {
-        }*/
-    }
 
     private void sendSimpleMessage(Channel channel, short type) {
         ChannelBuffer request = ChannelBuffers.directBuffer(ByteOrder.LITTLE_ENDIAN, 8);
@@ -129,7 +113,7 @@ public class ApelProtocolDecoder extends BaseProtocolDecoder {
         }
         
         if (type == MSG_TYPE_TRACKER_ID) {
-            Log.warning("Unsupported authentication type");
+            LOG.warn("Unsupported authentication type");
             return null;
         }
 

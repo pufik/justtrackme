@@ -24,14 +24,17 @@ import org.jboss.netty.channel.ChannelEvent;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.handler.codec.oneone.OneToOneDecoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.traccar.database.DataManager;
-import org.traccar.helper.Log;
 import org.traccar.model.Device;
 
 /**
  * Base class for protocol decoders
  */
 public abstract class BaseProtocolDecoder extends OneToOneDecoder {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(BaseProtocolDecoder.class);
 
 	//TODO: Think about injection
 	private DataManager dataManager = ContextFactory.getContext().getDataManager();
@@ -68,13 +71,13 @@ public abstract class BaseProtocolDecoder extends OneToOneDecoder {
 			} else {
 				deviceId = 0;
 				if (logWarning) {
-					Log.warning("Unknown device - " + uniqueId);
+					LOG.warn("Unknown device - " + uniqueId);
 				}
 				return false;
 			}
 		} catch (Exception error) {
 			deviceId = 0;
-			Log.warning(error);
+			LOG.warn("Can't identify device", error);
 			return false;
 		}
 	}

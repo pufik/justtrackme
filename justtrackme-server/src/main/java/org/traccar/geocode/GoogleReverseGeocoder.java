@@ -19,11 +19,17 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
-import org.traccar.helper.Log;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.JsonString;
 
-import javax.json.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GoogleReverseGeocoder implements ReverseGeocoder {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(GoogleReverseGeocoder.class);
 
     private final String url = "http://maps.googleapis.com/maps/api/geocode/json?latlng=%f,%f";
 
@@ -71,7 +77,7 @@ public class GoogleReverseGeocoder implements ReverseGeocoder {
             return format.format(address);
 
         } catch(Exception error) {
-            Log.warning(error);
+            LOG.warn("Can't get address", error);
         }
 
         return null;

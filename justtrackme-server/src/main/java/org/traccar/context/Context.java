@@ -1,9 +1,12 @@
 package org.traccar.context;
 
+import java.io.IOException;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 
+import org.jboss.netty.logging.InternalLoggerFactory;
+import org.jboss.netty.logging.Slf4JLoggerFactory;
 import org.traccar.database.DataCache;
 import org.traccar.database.DataManager;
 import org.traccar.database.PermissionsManager;
@@ -11,7 +14,6 @@ import org.traccar.geocode.GisgraphyReverseGeocoder;
 import org.traccar.geocode.GoogleReverseGeocoder;
 import org.traccar.geocode.NominatimReverseGeocoder;
 import org.traccar.geocode.ReverseGeocoder;
-import org.traccar.helper.Log;
 
 public class Context {
 
@@ -28,7 +30,7 @@ public class Context {
 
 		loggerEnabled = Boolean.valueOf(properties.getProperty("logger.enable"));
 		if (loggerEnabled) {
-			Log.setupLogger(properties);
+			setupLogger();
 		}
 
 		if (Boolean.valueOf(properties.getProperty("http.new"))) {
@@ -47,6 +49,11 @@ public class Context {
 			}
 		}
 
+	}
+
+	private void setupLogger() throws IOException {
+		// Workaround for "Bug 745866 - (EDG-45) Possible netty logging config problem"
+		InternalLoggerFactory.setDefaultFactory(new Slf4JLoggerFactory());
 	}
 
 	public boolean isLoggerEnabled() {

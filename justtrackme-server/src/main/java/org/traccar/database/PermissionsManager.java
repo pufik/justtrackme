@@ -22,11 +22,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.traccar.ContextFactory;
-import org.traccar.helper.Log;
 import org.traccar.model.Permission;
 
 public class PermissionsManager {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(PermissionsManager.class);
     
     private final Map<Long, Set<Long>> permissions = new HashMap<Long, Set<Long>>();
     
@@ -51,7 +54,7 @@ public class PermissionsManager {
                 getNotNull(permission.getUserId()).add(permission.getDeviceId());
             }
         } catch (SQLException error) {
-            Log.warning(error);
+            LOG.error("Can't get permissions", error);
         }
     }
     

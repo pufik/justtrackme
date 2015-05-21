@@ -18,16 +18,16 @@ package org.traccar.geocode;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.traccar.helper.Log;
-import org.w3c.dom.Document;
+import javax.json.Json;
+import javax.json.JsonObject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class NominatimReverseGeocoder implements ReverseGeocoder {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(NominatimReverseGeocoder.class);
 
     private final String url;
 
@@ -76,7 +76,7 @@ public class NominatimReverseGeocoder implements ReverseGeocoder {
             return format.format(address);
 
         } catch(Exception error) {
-            Log.warning(error);
+            LOG.warn("Can't get address", error);
         }
 
         return null;

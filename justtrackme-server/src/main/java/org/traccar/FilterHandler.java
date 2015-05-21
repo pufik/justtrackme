@@ -24,11 +24,14 @@ import java.util.Properties;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.oneone.OneToOneDecoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.traccar.helper.DistanceCalculator;
-import org.traccar.helper.Log;
 import org.traccar.model.Position;
 
 public class FilterHandler extends OneToOneDecoder {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(FilterHandler.class);
 
     private boolean filterInvalid;
     private boolean filterZero;
@@ -140,7 +143,7 @@ public class FilterHandler extends OneToOneDecoder {
         if (!result) {
             lastPositions.put(p.getDeviceId(), p);
         } else {
-            Log.info("Position filtered from " + p.getDeviceId());
+            LOG.info("Position filtered from " + p.getDeviceId());
         }
 
         return result;

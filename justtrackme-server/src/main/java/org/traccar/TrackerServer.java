@@ -29,11 +29,15 @@ import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.group.ChannelGroup;
 import org.jboss.netty.channel.group.ChannelGroupFuture;
 import org.jboss.netty.channel.group.DefaultChannelGroup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Tracker server
  */
 public abstract class TrackerServer {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(TrackerServer.class);
 
     private final Bootstrap bootstrap;
     private final String protocol;
@@ -124,6 +128,7 @@ public abstract class TrackerServer {
      * Start server
      */
     public void start() {
+    	LOG.info("Start server [{}] -> [{}:{}]", getProtocol(), getAddress(), getPort());    	
         InetSocketAddress endpoint;
         if (address == null) {
             endpoint = new InetSocketAddress(port);
@@ -147,6 +152,8 @@ public abstract class TrackerServer {
      * Stop server
      */
     public void stop() {
+    	LOG.info("Stop server [{}]: [{}:{}]", getProtocol(), getAddress(), getPort());
+    	
         ChannelGroupFuture future = getChannelGroup().close();
         future.awaitUninterruptibly();
     }

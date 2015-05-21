@@ -32,11 +32,14 @@ import org.jboss.netty.handler.codec.http.HttpRequestDecoder;
 import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
 import org.jboss.netty.handler.codec.string.StringDecoder;
 import org.jboss.netty.handler.codec.string.StringEncoder;
-import org.traccar.helper.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.traccar.protocol.*;
 
 
 public class ServerManager {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(ServerManager.class);
 
     private final List<TrackerServer> serverList = new LinkedList<TrackerServer>();
     
@@ -134,14 +137,17 @@ public class ServerManager {
     }
 
     public void start() {
-    	Log.info("Start server...");
+    	LOG.info("Start server manager...");
         for (Object server: serverList) {
             ((TrackerServer) server).start();
         }
+        
+        LOG.info("Server manager started");
+        
     }
 
     public void stop() {
-    	Log.info("Shutting down server manager...");
+    	LOG.info("Shutting down server manager...");
     	
         for (Object server: serverList) {
             ((TrackerServer) server).stop();
@@ -150,6 +156,8 @@ public class ServerManager {
         // Release resources
         GlobalChannelFactory.release();
         GlobalTimer.release();
+        
+        LOG.info("Server stoped");
     }
 
     private boolean isProtocolEnabled(String protocol) {
