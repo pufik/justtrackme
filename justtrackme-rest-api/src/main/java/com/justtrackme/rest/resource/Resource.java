@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public abstract class Resource {
+	
+	public static final String SLASH = "/";
 
 	private Set<Link> links = new HashSet<>();
 
