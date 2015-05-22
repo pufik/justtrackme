@@ -7,7 +7,6 @@ import javax.annotation.PostConstruct;
 
 import org.jboss.netty.logging.InternalLoggerFactory;
 import org.jboss.netty.logging.Slf4JLoggerFactory;
-import org.traccar.database.DataCache;
 import org.traccar.database.DataManager;
 import org.traccar.database.PermissionsManager;
 import org.traccar.geocode.GisgraphyReverseGeocoder;
@@ -20,7 +19,6 @@ public class Context {
 	private boolean loggerEnabled;
 	private Properties properties;
 	private DataManager dataManager;
-	private DataCache dataCache;
 	private ReverseGeocoder reverseGeocoder;
 	private PermissionsManager permissionsManager;
 
@@ -78,14 +76,6 @@ public class Context {
 
 	public void setDataManager(DataManager dataManager) {
 		this.dataManager = dataManager;
-	}
-
-	public DataCache getDataCache() {
-		return dataCache;
-	}
-
-	public void setDataCache(DataCache dataCache) {
-		this.dataCache = dataCache;
 	}
 
 	public ReverseGeocoder getReverseGeocoder() {

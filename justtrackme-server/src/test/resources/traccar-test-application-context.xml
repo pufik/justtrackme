@@ -14,7 +14,6 @@
 	<bean id="serverContext" class="org.traccar.context.Context">
 	    <property name="properties" ref="traccarApplicationProperties" />
 		<property name="dataManager" ref="dataManager" />
-		<property name="dataCache" ref="dataCache" />
 	</bean>
 
 	<bean id="contextFactory" class="org.springframework.beans.factory.config.MethodInvokingBean">
@@ -26,9 +25,5 @@
 	<!-- Data managers -->
 	<alias name="testDataManager" alias="dataManager"/>
 	<bean id="testDataManager" class="org.traccar.helper.TestDataManager" />
-	
-	<bean id="dataCache" class="org.traccar.database.DataCache">
-		<constructor-arg ref="dataManager" />
-	</bean>
 	
 </beans>

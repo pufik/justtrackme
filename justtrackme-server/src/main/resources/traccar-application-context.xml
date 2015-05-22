@@ -21,7 +21,6 @@
 	<bean id="serverContext" class="org.traccar.context.Context">
 		<property name="properties" ref="traccarApplicationProperties" />
 		<property name="dataManager" ref="dataManager" />
-		<property name="dataCache" ref="dataCache" />
 	</bean>
 
 	<bean id="contextFactory" class="org.springframework.beans.factory.config.MethodInvokingBean">
@@ -45,12 +44,9 @@
 	<bean id="defaultDataManager" class="org.traccar.database.DataManager">
 		<property name="dataSource" ref="dataSource"></property>
 		<property name="deviceDao" ref="deviceDao"></property>
+		<property name="positionDao" ref="positionDao"></property>
 	</bean>
 	
 	<bean id="mockDataManager" class="org.traccar.helper.MockDataManager" />
-
-	<bean id="dataCache" class="org.traccar.database.DataCache">
-		<constructor-arg ref="dataManager" />
-	</bean>
 
 </beans>

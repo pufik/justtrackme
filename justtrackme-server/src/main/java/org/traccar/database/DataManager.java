@@ -15,41 +15,31 @@
  */
 package org.traccar.database;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
-import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.traccar.model.Device;
 import org.traccar.model.Permission;
 import org.traccar.model.Position;
 
 import com.justtrackme.dao.device.DeviceDao;
+import com.justtrackme.dao.position.PositionDao;
 
+//TODO: Should be removed, temporary glue
 public class DataManager {
 
+	private static final Logger LOG = LoggerFactory.getLogger(DataManager.class);
+
 	private DataSource dataSource;
-	
+
 	private DeviceDao deviceDao;
 
-	private NamedParameterStatement queryAddPosition;
-	private NamedParameterStatement queryUpdateLatestPosition;
-
-	@PostConstruct
-	public void init() throws Exception {
-		// Initialize queries
-		queryAddPosition = new NamedParameterStatement(
-				"INSERT INTO position (deviceId, serverTime, deviceTime, fixTime, valid, latitude, longitude, altitude, speed, course, address, other)"
-						+ " VALUES (:deviceId, NOW(), :time, :time, :valid, :latitude, :longitude, :altitude, :speed, :course, :address, :other);", dataSource,
-				Statement.RETURN_GENERATED_KEYS);
-
-		queryUpdateLatestPosition = new NamedParameterStatement("UPDATE device SET positionId = :id WHERE id = :deviceId;", dataSource);
-	}
+	private PositionDao positionDao;
 
 	public DataSource getDataSource() {
 		return dataSource;
@@ -57,64 +47,41 @@ public class DataManager {
 
 	public Device getDeviceByUniqueId(String uniqueId) throws SQLException {
 		Device trackDevice = null;
-		
+
 		com.justtrackme.model.Device device = deviceDao.getById(uniqueId);
-		
-		if(Objects.nonNull(device)){
+
+		if (Objects.nonNull(device)) {
 			trackDevice = new Device();
 			trackDevice.setId(device.getId());
 			trackDevice.setUniqueId(device.getUniqueId());
 			trackDevice.setName(device.getName());
 		}
 
-		return trackDevice; 
+		return trackDevice;
 	}
 
-	private NamedParameterStatement.ResultSetProcessor<Long> generatedKeysResultSetProcessor = new NamedParameterStatement.ResultSetProcessor<Long>() {
-		@Override
-		public Long processNextRow(ResultSet rs) throws SQLException {
-			return rs.getLong(1);
-		}
-	};
+	public void addPosition(Position trackedPosition) throws SQLException {
+		LOG.info("Process position for device [{}] -> [lat:{};lon:{};alt:{}]", trackedPosition.getDeviceId(), trackedPosition.getLatitude(),
+				trackedPosition.getLongitude(), trackedPosition.getAltitude());
 
-	public synchronized Long addPosition(Position position) throws SQLException {
-		if (queryAddPosition != null) {
-			List<Long> result = assignVariables(queryAddPosition.prepare(), position).executeUpdate(generatedKeysResultSetProcessor);
-			if (result != null && !result.isEmpty()) {
-				return result.iterator().next();
-			}
-		}
-		return null;
-	}
+		com.justtrackme.model.Position position = new com.justtrackme.model.Position();
 
-	public void updateLatestPosition(Position position, Long positionId) throws SQLException {
-		if (queryUpdateLatestPosition != null) {
-			assignVariables(queryUpdateLatestPosition.prepare(), position).setLong("id", positionId).executeUpdate();
-		}
-	}
+		position.setDeviceId(trackedPosition.getDeviceId());
+		position.setProtocol(trackedPosition.getProtocol());
+		position.setServerTime(trackedPosition.getServerTime());
+		position.setDeviceTime(trackedPosition.getDeviceTime());
+		position.setFixTime(trackedPosition.getFixTime());
+		position.setValid(trackedPosition.getValid());
+		position.setLatitude(trackedPosition.getLatitude());
+		position.setLongitude(trackedPosition.getLongitude());
+		position.setAltitude(trackedPosition.getAltitude());
+		position.setSpeed(trackedPosition.getSpeed());
+		position.setCourse(trackedPosition.getCourse());
+		position.setAddress(trackedPosition.getAddress());
+		position.setOther(trackedPosition.getOther());
 
-	private NamedParameterStatement.Params assignVariables(NamedParameterStatement.Params params, Position position) throws SQLException {
+		getPositionDao().create(position);
 
-		params.setString("protocol", position.getProtocol());
-		params.setLong("deviceId", position.getDeviceId());
-		params.setTimestamp("deviceTime", position.getDeviceTime());
-		params.setTimestamp("fixTime", position.getFixTime());
-		params.setBoolean("valid", position.getValid());
-		params.setDouble("altitude", position.getAltitude());
-		params.setDouble("latitude", position.getLatitude());
-		params.setDouble("longitude", position.getLongitude());
-		params.setDouble("speed", position.getSpeed());
-		params.setDouble("course", position.getCourse());
-		params.setString("address", position.getAddress());
-		params.setString("other", position.getOther());
-
-		// temporary
-		params.setTimestamp("time", position.getFixTime());
-		params.setLong("device_id", position.getDeviceId());
-		params.setLong("power", null);
-		params.setString("extended_info", position.getOther());
-
-		return params;
 	}
 
 	public Collection<Permission> getPermissions() throws SQLException {
@@ -131,5 +98,13 @@ public class DataManager {
 
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
+	}
+
+	public PositionDao getPositionDao() {
+		return positionDao;
+	}
+
+	public void setPositionDao(PositionDao positionDao) {
+		this.positionDao = positionDao;
 	}
 }

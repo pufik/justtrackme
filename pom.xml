@@ -12,6 +12,7 @@
 		<module>justtrackme-server</module>
 		<module>justtrackme-rest-api</module>
 		<module>justtrackme-persistence</module>
+		<module>justtrackme-ui</module>
 	</modules>
 
 	<properties>

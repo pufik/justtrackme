@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html ng-app="demoapp">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../bower_components/angular/angular.min.js"></script>
+    <script src="../bower_components/leaflet/dist/leaflet.js"></script>
+    <script src="../dist/angular-leaflet-directive.min.js"></script>
+    <link rel="stylesheet" href="../bower_components/leaflet/dist/leaflet.css" />
+    <script>
+        var app = angular.module("demoapp", ["leaflet-directive"]);
+        app.controller('BasicMapWithoutAnimationsController', [ '$scope', "$http", "$timeout", "$interval", "leafletBoundsHelpers", function($scope, $http, $timeout, $interval, leafletBoundsHelpers) {
+        	
+        	$scope.requestTimeout = 5000;
+        	$scope.pointAmount = 1;
+        	$scope.trackCentered = false;
+        	
+            angular.extend($scope, {
+            	center: {zoom: 14},
+            	bounds: {},
+                defaults: {
+                    zoomAnimation: true,
+                    markerZoomAnimation: true,
+                    fadeAnimation: true
+                },
+                markers: []
+            });
+            
+            $scope.loadTracks = function loadTracks() {
+                $http.get('http://localhost:8080/justtrackme-rest/devices/861213020677867/positions?limit=' + $scope.pointAmount+ '&timestamp='+ new Date().getTime()).success(function(data) {
+                    $scope.markers = [];
+                    
+                	angular.forEach(data.entities, function(location, key){
+                		if(!$scope.trackCentered){
+                			$scope.center = {lat: location.latitude, lng: location.longitude, zoom: 14};
+                			$scope.trackCentered = true;
+                		}
+                		
+                		$scope.markers[location.id] = {lat: location.latitude, lng: location.longitude};
+                    });
+                	
+                	
+                });
+            };
+            
+            $timeout(function(){
+            	$scope.loadTracks();
+            });
+            
+            $interval( function(){ $scope.loadTracks(); }, $scope.requestTimeout);
+            
+        } ]);
+    </script>
+  </head>
+  <body ng-controller="BasicMapWithoutAnimationsController">
+    <leaflet bounds="bounds" center="center" defaults="defaults" markers="markers" width="100%" height="800"></leaflet> 
+    <input type="text" ng-model="pointAmount" />
+  </body>
+</html>
