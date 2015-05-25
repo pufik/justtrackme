@@ -26,6 +26,11 @@
                 markers: []
             });
             
+            $scope.changeDevice = function changeDevice(){
+            	$scope.trackCentered = false;
+            	$scope.loadTracks();
+            }
+            
             
             $scope.loadDevice = function loadTracks() {
                 $http.get('http://localhost:8080/justtrackme-rest/devices').success(function(data) {
@@ -67,13 +72,13 @@
   </head>
   <body ng-controller="BasicMapWithoutAnimationsController">
   <label for="device">Device:</label>
-  <select ng-options="item as item.name for item in devices" ng-model="selectedDevice" ng-change="loadTracks()"></select>
+  <select ng-options="item as item.name for item in devices" ng-model="selectedDevice" ng-change="changeDevice()"></select>
   <label for="pointAmount">History:</label>
 	<select ng-model="pointAmount" ng-change="loadTracks()">
 		<option value="1">Latest</option>
 		<option value="5">5</option>
 		<option value="10">10</option>
 	</select>
-	<leaflet bounds="bounds" center="center" defaults="defaults" markers="markers" width="100%" height="480"></leaflet> 
+	<leaflet bounds="bounds" center="center" defaults="defaults" markers="markers" width="100%" height="600"></leaflet> 
   </body>
 </html>
