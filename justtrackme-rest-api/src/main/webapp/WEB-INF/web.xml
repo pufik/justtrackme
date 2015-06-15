@@ -10,7 +10,6 @@
 		<param-value>
 			classpath:rest-application-context.xml
 			classpath*:persistence-application-context.xml
-			classpath*:traccar-application-context.xml
 		</param-value>
 	</context-param>
 
