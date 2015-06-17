@@ -5,6 +5,8 @@
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 	">
+	
+	<context:component-scan base-package="com.justtrackme.service" />
 
 	<bean id="applicationProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
 		<property name="locations">

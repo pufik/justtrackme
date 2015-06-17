@@ -16,7 +16,6 @@ angular.module('errorHandler', []).factory('httpErrorInterceptor', ['$q', 'setti
             if (rejection.status == 401) {
             	// TODO: Let's redirect to SSO
             	//console.log(settings.oauth2Url);
-                window.location = settings.oauth2Url;
             }
             return $q.reject(rejection);
         }

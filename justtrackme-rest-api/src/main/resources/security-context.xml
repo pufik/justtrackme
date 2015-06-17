@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+	
+	<security:http realm="JustTrackMe API">
+		<security:http-basic />
+		<security:csrf disabled="true" />
+		<security:intercept-url pattern="/**" access="isAuthenticated()" />
+		<security:logout logout-url="/logout"/>
+	</security:http>
+	
+	<security:authentication-manager alias="authenticationManager">
+		<security:authentication-provider ref="defaultAuthenticationProvider" />
+	</security:authentication-manager>
+	
+	<bean id="defaultAuthenticationProvider" class="com.justtrackme.security.DefaultAuthenticationProvider" />
+	<bean id="defaultAuthenticationEntryPoint" class="com.justtrackme.security.DefaultAuthenticationEntryPoint" />
+	
+</beans>
